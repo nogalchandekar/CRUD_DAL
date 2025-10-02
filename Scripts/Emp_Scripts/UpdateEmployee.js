@@ -3,10 +3,10 @@
     $("#btnSubmit").click(function () {
         $("#btnSubmit").text("Processing....!");
         $("#btnSubmit").prop("disabled", true);
-        AddEmployee();
+        UpdateEmployee();
     });
 
-    function AddEmployee() {
+    function UpdateEmployee() {
         var requestUrl = "/Home/AddEmployee";
         var EmployeeModel = getEmployeeModel();
 
