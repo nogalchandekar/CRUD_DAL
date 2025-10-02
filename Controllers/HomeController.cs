@@ -21,6 +21,13 @@ namespace CRUD_DAL.Controllers
         {
             return View();
         }
+        public ActionResult UpdateEmployee(int Emp_Id)
+        {
+			DAL.Employee_DAL emp = new DAL.Employee_DAL();
+			VMEmployee vMEmployee = emp.getDataById(Emp_Id);
+            vMEmployee = emp.getDataById(Emp_Id);
+            return View(vMEmployee);
+        }
 
         [HttpPost]
 		public ActionResult AddEmployee(VMEmployee vMEmployee)
@@ -28,8 +35,14 @@ namespace CRUD_DAL.Controllers
 		 return Json(emp.AddEmployee(vMEmployee), JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult DeleteEmployee(int Emp_Id)
+		{
+			return Json(emp.DeleteById(Emp_Id), JsonRequestBehavior.AllowGet);
+        }	
 
-		public ActionResult getList()
+
+        public ActionResult getList()
 		{
 			return Json(emp.getList(), JsonRequestBehavior.AllowGet);
 		}
@@ -37,9 +50,10 @@ namespace CRUD_DAL.Controllers
 		public ActionResult About()
 		{
 			ViewBag.Message = "Your application description page.";
-
 			return View();
 		}
+
+
 
 		public ActionResult Contact()
 		{

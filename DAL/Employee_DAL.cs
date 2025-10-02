@@ -11,7 +11,7 @@ namespace CRUD_DAL.DAL
         db_CRUD_DALEntities db = new db_CRUD_DALEntities();
 
 
-        //========== Add / Update Employee ==========
+        //========== Add / Update Employee ==========///
         public string AddEmployee(VMEmployee vMEmployee)
         {
             using (var transaction = db.Database.BeginTransaction())
@@ -92,7 +92,6 @@ namespace CRUD_DAL.DAL
             }
         }
 
-
         ///============= get List ===========================///
         public List<VMEmployee> getList()
         {
@@ -118,6 +117,64 @@ namespace CRUD_DAL.DAL
             }
             return vMEmployees;
         }
+
+        ///============ get DataById=================///
+        public VMEmployee getDataById(int Emp_Id)
+        {
+            VMEmployee vMEmployee = new VMEmployee();
+            try
+            {
+                vMEmployee = (from s in db.tbl_Employee
+                              where  s.Emp_Id == Emp_Id
+                              select new VMEmployee
+                              {
+                                  Emp_Id = s.Emp_Id,
+                                  Emp_Name = s.Emp_Name,
+                                  Emp_Designation = s.Emp_Designation,
+                                  Emp_Age = s.Emp_Age,
+                                  Emp_Salary = s.Emp_Salary,
+                                  Emp_MobileNo = s.Emp_MobileNo,
+                                  Emp_Gender = s.Emp_Gender,
+                                  Emp_Address = s.Emp_Address,
+                              }).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error" + ex.Message);
+            }
+            return vMEmployee;
+        }
+
+       ///================= get Delete By Id ===================///
+        public string DeleteById(int Emp_Id)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var employee = db.tbl_Employee
+                        .FirstOrDefault(x => x.Emp_Id == Emp_Id);
+                    if (employee != null)
+                    {
+                        db.Entry(employee).State = System.Data.Entity.EntityState.Deleted;
+                        db.SaveChanges();
+                        transaction.Commit();
+                        return "Employee Deleted Successfully";
+                    }
+                    else
+                    {
+                        return "Employee not found";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    var errorMessage = ex.InnerException?.InnerException?.Message ?? ex.Message;
+                    return "Error: " + errorMessage;
+                }
+            }
+        }
+
 
     }
 }

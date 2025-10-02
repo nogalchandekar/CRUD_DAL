@@ -213,6 +213,7 @@
     </Content>
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\Emp_Scripts\List.js" />
+    <Content Include="Scripts\Emp_Scripts\UpdateEmployee.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
@@ -238,6 +239,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\List.cshtml" />
+    <Content Include="Views\Home\UpdateEmployee.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Admin\" />
