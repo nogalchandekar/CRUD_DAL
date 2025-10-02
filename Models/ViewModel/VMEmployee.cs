@@ -12,8 +12,8 @@ namespace CRUD_DAL.Models.ViewModel
         public string Emp_Name { get; set; }
         public string Emp_Designation { get; set; }
         public Nullable<int> Emp_Age { get; set; }
-        public Nullable<decimal> Emp_Salary { get; set; }
-        public Nullable<decimal> Emp_MobileNo { get; set; }
+        public string Emp_Salary { get; set; }
+        public string Emp_MobileNo { get; set; }
         public string Emp_Gender { get; set; }
         public string Emp_Address { get; set; }
         public string CreatedBy { get; set; }

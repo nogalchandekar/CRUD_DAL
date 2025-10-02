@@ -1,6 +1,7 @@
 ﻿using CRUD_DAL.Models.DataModel;
 using CRUD_DAL.Models.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CRUD_DAL.DAL
@@ -9,41 +10,60 @@ namespace CRUD_DAL.DAL
 	{
         db_CRUD_DALEntities db = new db_CRUD_DALEntities();
 
-        //========== Add Employee ==========//
+
+        //========== Add / Update Employee ==========
         public string AddEmployee(VMEmployee vMEmployee)
         {
-            using (var transcations = db.Database.BeginTransaction())
+            using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    tbl_Employee employee = db.tbl_Employee.FirstOrDefault(x=>x.Emp_Id==vMEmployee.Emp_Id);
-                    if (employee == null)
-                    { 
-                        bool isDuplicate = db.tbl_Employee.Any(x => x.Emp_MobileNo == vMEmployee.Emp_MobileNo);
+                    // Check if employee already exists by ID
+                    tbl_Employee employee = db.tbl_Employee
+                        .FirstOrDefault(x => x.Emp_Id == vMEmployee.Emp_Id);
+
+                    if (employee == null) // ====== ADD ======
+                    {
+                        // Check for duplicate Mobile No
+                        bool isDuplicate = db.tbl_Employee
+                            .Any(x => x.Emp_MobileNo == vMEmployee.Emp_MobileNo);
+
                         if (isDuplicate)
                         {
-                            return "Mobile No is Already Exists";
+                            return "Mobile No already exists";
                         }
+
                         employee = new tbl_Employee
                         {
                             Emp_Name = vMEmployee.Emp_Name,
                             Emp_Designation = vMEmployee.Emp_Designation,
                             Emp_Age = vMEmployee.Emp_Age,
                             Emp_Salary = vMEmployee.Emp_Salary,
-                            Emp_MobileNo = vMEmployee.Emp_MobileNo,
+                            Emp_MobileNo = vMEmployee.Emp_MobileNo, // string (nvarchar) now
                             Emp_Gender = vMEmployee.Emp_Gender,
                             Emp_Address = vMEmployee.Emp_Address,
                             CreatedBy = "Admin",
-                            CreatedDate = DateTime.Now,
+                            CreatedDate = DateTime.Now
                         };
+
                         db.tbl_Employee.Add(employee);
                         db.SaveChanges();
-                        transcations.Commit();
+                        transaction.Commit();
+
                         return "Employee Added Successfully";
                     }
-                    else
+                    else // ====== UPDATE ======
                     {
-                        employee.Emp_Id = vMEmployee.Emp_Id;
+                        // Check duplicate mobile number (exclude current employee)
+                        bool isDuplicate = db.tbl_Employee
+                            .Any(x => x.Emp_MobileNo == vMEmployee.Emp_MobileNo && x.Emp_Id != vMEmployee.Emp_Id);
+
+                        if (isDuplicate)
+                        {
+                            return "Mobile No already exists for another employee";
+                        }
+
+                        // Do not update Emp_Id (Identity column)
                         employee.Emp_Name = vMEmployee.Emp_Name;
                         employee.Emp_Designation = vMEmployee.Emp_Designation;
                         employee.Emp_Age = vMEmployee.Emp_Age;
@@ -51,22 +71,53 @@ namespace CRUD_DAL.DAL
                         employee.Emp_MobileNo = vMEmployee.Emp_MobileNo;
                         employee.Emp_Gender = vMEmployee.Emp_Gender;
                         employee.Emp_Address = vMEmployee.Emp_Address;
-                        employee.ModifiedBy= "Admin";
+                        employee.ModifiedBy = "Admin";
                         employee.ModifiedDate = DateTime.Now;
+
                         db.Entry(employee).State = System.Data.Entity.EntityState.Modified;
                         db.SaveChanges();
-                        transcations.Commit();
+                        transaction.Commit();
+
                         return "Employee Updated Successfully";
                     }
-
                 }
                 catch (Exception ex)
                 {
-                    transcations.Rollback();
-                    Console.WriteLine(ex.Message);
+                    transaction.Rollback();
+
+                    // Capture inner exception for actual SQL error
+                    var errorMessage = ex.InnerException?.InnerException?.Message ?? ex.Message;
+                    return "Error: " + errorMessage;
                 }
-                return "Something Wents Wrong Please try Again Later";
             }
         }
+
+
+        ///============= get List ===========================///
+        public List<VMEmployee> getList()
+        {
+            List<VMEmployee> vMEmployees = new List<VMEmployee>();
+            try
+            {
+                vMEmployees = (from s in db.tbl_Employee
+                               select new VMEmployee
+                               {
+                                   Emp_Id = s.Emp_Id,
+                                   Emp_Name = s.Emp_Name,
+                                   Emp_Designation = s.Emp_Designation,
+                                   Emp_Age = s.Emp_Age,
+                                   Emp_Salary = s.Emp_Salary,
+                                   Emp_MobileNo = s.Emp_MobileNo,
+                                   Emp_Gender = s.Emp_Gender,
+                                   Emp_Address = s.Emp_Address,
+                               }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error"+ex.Message);
+            }
+            return vMEmployees;
+        }
+
     }
 }

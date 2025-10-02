@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Employee List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #f9fafb, #e0f2fe);
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-6xl">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-blue-700">Employee Registration Details</h2>
+            <!-- Back button to registration form -->
+            <a href="/Home/Index" class="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow">⬅ Back</a>
+        </div>
+
+        <div class="overflow-x-auto bg-white shadow-xl rounded-2xl border border-blue-100">
+            <table class="min-w-full divide-y divide-gray-200 text-xs">
+                <thead class="bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Sr No.</th>
+                        <th class="px-4 py-2 text-left">Name</th>
+                        <th class="px-4 py-2 text-left">Designation</th>
+                        <th class="px-4 py-2 text-left">Age</th>
+                        <th class="px-4 py-2 text-left">Salary</th>
+                        <th class="px-4 py-2 text-left">Mobile</th>
+                        <th class="px-4 py-2 text-left">Gender</th>
+                        <th class="px-4 py-2 text-left">Address</th>
+                        <th class="px-4 py-2 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200" id="tblemployeebody">
+                    <!-- Data will be loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-3.7.0.js"></script>
+<script src="~/Scripts/Emp_Scripts/List.js"></script>

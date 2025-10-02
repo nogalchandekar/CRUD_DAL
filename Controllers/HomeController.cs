@@ -3,6 +3,7 @@ using CRUD_DAL.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Mvc;
 
@@ -16,12 +17,22 @@ namespace CRUD_DAL.Controllers
 		{
 			return View();
 		}
+        public ActionResult List()
+        {
+            return View();
+        }
 
-		[HttpPost]
+        [HttpPost]
 		public ActionResult AddEmployee(VMEmployee vMEmployee)
 		{ 
 		 return Json(emp.AddEmployee(vMEmployee), JsonRequestBehavior.AllowGet);
         }
+
+
+		public ActionResult getList()
+		{
+			return Json(emp.getList(), JsonRequestBehavior.AllowGet);
+		}
 
 		public ActionResult About()
 		{
